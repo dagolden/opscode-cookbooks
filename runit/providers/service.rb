@@ -130,12 +130,6 @@ action :enable do
   end
 end
 
-action :start do
-  unless @svc.running
-    execute "#{node['runit']['sv_bin']} up #{new_resource.service_name}"
-  end
-end
-
 action :disable do
   if @svc.enabled
     execute "#{node['runit']['sv_bin']} down #{new_resource.service_name}"
@@ -146,56 +140,76 @@ action :disable do
   end
 end
 
+# The following actions are likely to be used by notifications, thus they
+# require immediate execution or else they will not otherwise be executed
+# with a deferred :run action
+
+action :start do
+  unless @svc.running
+    e = execute "#{node['runit']['sv_bin']} up #{new_resource.service_name}"
+    e.run_action(:run)
+  end
+end
+
 action :stop do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} down #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} down #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :restart do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} restart #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} restart #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :reload do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} force-reload #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} force-reload #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :once do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} once #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} once #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :cont do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} cont #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} cont #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :hup do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} hup #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} hup #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :int do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} int #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} int #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :term do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} term #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} term #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
 action :kill do
   if @svc.running
-    execute "#{node['runit']['sv_bin']} kill #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e = execute "#{node['runit']['sv_bin']} kill #{node['runit']['service_dir']}/#{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
