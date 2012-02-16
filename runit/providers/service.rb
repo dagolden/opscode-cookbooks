@@ -162,6 +162,9 @@ action :restart do
   if @svc.running
     e = execute "#{node['runit']['sv_bin']} restart #{node['runit']['service_dir']}/#{new_resource.service_name}"
     e.run_action(:run)
+  else
+    e = execute "#{node['runit']['sv_bin']} up #{new_resource.service_name}"
+    e.run_action(:run)
   end
 end
 
